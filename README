@@ -1,0 +1,21 @@
+AVR-NET-MIO -  Alternative AVR-NET-IO Firmware
+==============================================
+
+
+This is a fork of U. Radigs web server (developed for
+his eth_m32_ex) customized for my use cases on the
+base of the AVR-NET-IO board of Pollin (Part 810 058)
+http://www.pollin.de
+
+This software is based on the AVR gcc toolchain and
+does not require the AVR Studio. I´m using CrossPack
+for development on OSX:
+https://www.obdev.at/products/crosspack/index.html
+
+To compile the project:
+# make
+
+
+To flash the project using the configured (Makefile)
+programmer:
+# make flash
