@@ -42,7 +42,7 @@ extern unsigned char mymac[6];
 #define ENC_DDR                 DDRB
 #define ENC_PORT                PORTB
 #define ENC_PIN                 PINB
-#define ENC_CS                  4		//4 für Pollin NET I/O Board; 3 für UR board
+#define ENC_CS                  4		//4 fÃ¼r Pollin NET I/O Board; 3 fÃ¼r UR board
 #define ENC_INT                 2
 
 #define enc_select()            ENC_PORT &= ~(1<<ENC_CS)

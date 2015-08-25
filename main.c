@@ -6,15 +6,15 @@ known Problems: none
 Version:        24.10.2007
 Description:    Webserver uvm.
 
-Dieses Programm ist freie Software. Sie kˆnnen es unter den Bedingungen der 
-GNU General Public License, wie von der Free Software Foundation verˆffentlicht, 
-weitergeben und/oder modifizieren, entweder gem‰ﬂ Version 2 der Lizenz oder 
-(nach Ihrer Option) jeder sp‰teren Version. 
+Dieses Programm ist freie Software. Sie k√∂nnen es unter den Bedingungen der 
+GNU General Public License, wie von der Free Software Foundation ver√∂ffentlicht, 
+weitergeben und/oder modifizieren, entweder gem√§√ü Version 2 der Lizenz oder 
+(nach Ihrer Option) jeder sp√§teren Version. 
 
-Die Verˆffentlichung dieses Programms erfolgt in der Hoffnung, 
-daﬂ es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
+Die Ver√∂ffentlichung dieses Programms erfolgt in der Hoffnung, 
+da√ü es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
 sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
-F‹R EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
+F√úR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
 
 Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
 Programm erhalten haben. 
@@ -135,7 +135,7 @@ int main(void)
       RESET();
     }
 
-    //USART Daten f¸r Telnetanwendung?
+    //USART Daten f√ºr Telnetanwendung?
     telnetd_send_data();
 
     if(ping.result)

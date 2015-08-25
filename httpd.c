@@ -6,15 +6,15 @@
  Version:        24.10.2007
  Description:    Webserver Applikation
 
- Dieses Programm ist freie Software. Sie können es unter den Bedingungen der 
- GNU General Public License, wie von der Free Software Foundation veröffentlicht, 
- weitergeben und/oder modifizieren, entweder gemäß Version 2 der Lizenz oder 
- (nach Ihrer Option) jeder späteren Version. 
+ Dieses Programm ist freie Software. Sie kÃ¶nnen es unter den Bedingungen der 
+ GNU General Public License, wie von der Free Software Foundation verÃ¶ffentlicht, 
+ weitergeben und/oder modifizieren, entweder gemÃ¤ÃŸ Version 2 der Lizenz oder 
+ (nach Ihrer Option) jeder spÃ¤teren Version. 
 
- Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, 
- daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
+ Die VerÃ¶ffentlichung dieses Programms erfolgt in der Hoffnung, 
+ daÃŸ es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
  sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
- FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
+ FÃœR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
 
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
  Programm erhalten haben. 
@@ -49,7 +49,7 @@ unsigned char PORT_tmp = 0;
 char dstr[24]={"No Time...             "};
 
 //----------------------------------------------------------------------------
-//Variablenarry zum einfügen in Webseite %VA@00 bis %VA@09
+//Variablenarry zum einfÃ¼gen in Webseite %VA@00 bis %VA@09
 unsigned int var_array[MAX_VAR_ARRAY] = {10,50,30,0,0,0,0,0,0,0};
 //----------------------------------------------------------------------------
 
@@ -109,8 +109,8 @@ void httpd (unsigned char index)
         return;
     }
 
-	//Allererste Aufruf des Ports für diese Anwendung
-	//HTTPD_Anwendungsstack löschen
+	//Allererste Aufruf des Ports fÃ¼r diese Anwendung
+	//HTTPD_Anwendungsstack lÃ¶schen
 	if(tcp_entry[index].app_status==1)
 	{
 		httpd_stack_clear(index);
@@ -124,8 +124,8 @@ void httpd (unsigned char index)
 		return;
 	}
 	
-	//Der Header wurde gesendet und mit ACK bestätigt (tcp_entry[index].app_status+1)
-	//war das HTML Packet fertig, oder müssen weitere Daten gesendet werden, oder Retransmission?
+	//Der Header wurde gesendet und mit ACK bestÃ¤tigt (tcp_entry[index].app_status+1)
+	//war das HTML Packet fertig, oder mÃ¼ssen weitere Daten gesendet werden, oder Retransmission?
 	if (tcp_entry[index].app_status > 2 && tcp_entry[index].app_status < 0xFFFE && tcp_entry[index].status == ACK_FLAG)
 	{
 		httpd_data_send (index);
@@ -144,7 +144,7 @@ void httpd (unsigned char index)
 }
 
 //----------------------------------------------------------------------------
-//HTTPD_STACK löschen
+//HTTPD_STACK lÃ¶schen
 void httpd_stack_clear (unsigned char index)
 {
 	http_entry[index].http_header_type = TEXT_HTML;
@@ -175,7 +175,7 @@ void httpd_header_check (unsigned char index)
 		http_entry[index].post = 1;
 		}
 	
-	//finden der Authorization und das Ende im Header auch über mehrere Packete hinweg!!	
+	//finden der Authorization und das Ende im Header auch Ã¼ber mehrere Packete hinweg!!	
 	if(*http_entry[index].hdr_end_pointer != 0)
 	{		
 		for(a=TCP_DATA_START_VAR;a<(TCP_DATA_END_VAR);a++)
@@ -245,7 +245,7 @@ void httpd_header_check (unsigned char index)
 				//Schaltanweisung wurde gefunden
 			}
 		
-			//Submit schließt die suche ab!
+			//Submit schlieÃŸt die suche ab!
 			if (eth_buffer[a] != *http_entry[index].post_ready_ptr++)
 			{
 				http_entry[index].post_ready_ptr = post_ready;
@@ -321,10 +321,10 @@ void httpd_header_check (unsigned char index)
 	}
 
 	//Wurde das Ende vom Header nicht erreicht
-	//kommen noch weitere Stücke vom Header!
+	//kommen noch weitere StÃ¼cke vom Header!
 	if ((*http_entry[index].hdr_end_pointer != 0) || (http_entry[index].post == 1))
 	{
-		//Der Empfang wird Quitiert und es wird auf weiteres Headerstück gewartet
+		//Der Empfang wird Quitiert und es wird auf weiteres HeaderstÃ¼ck gewartet
 		tcp_entry[index].status =  ACK_FLAG;
 		create_new_tcp_packet(0,index);
 		//Warten auf weitere Headerpackete
@@ -333,7 +333,7 @@ void httpd_header_check (unsigned char index)
 	}	
 	
 	//Wurde das Passwort in den ganzen Headerpacketen gefunden?
-	//Wenn nicht dann ausführen und Passwort anfordern!
+	//Wenn nicht dann ausfÃ¼hren und Passwort anfordern!
 	if((!http_entry[index].http_auth) && tcp_entry[index].status&PSH_FLAG)
 	{	
 		//HTTP_AUTH_Header senden!
@@ -450,7 +450,7 @@ void httpd_data_send (unsigned char index)
 		b = pgm_read_byte(http_entry[index].new_page_pointer++);
 		eth_buffer[TCP_DATA_START + a] = b;
 		
-		//Müssen Variablen ins Packet eingesetzt werden? ===> %VA@00 bis %VA@09
+		//MÃ¼ssen Variablen ins Packet eingesetzt werden? ===> %VA@00 bis %VA@09
 		if (b == '%')
 		{
 			if (strncasecmp_P("VA@",http_entry[index].new_page_pointer,3)==0)
@@ -465,7 +465,7 @@ void httpd_data_send (unsigned char index)
 			}
 			
             #if USE_NTP
-            //Zeit in Webseite einfügen
+            //Zeit in Webseite einfÃ¼gen
             if (strncasecmp_P("TIME",http_entry[index].new_page_pointer,4)==0)
             {
                 if (ntp_state == NTP_STATE_REQ_ERR)
@@ -557,7 +557,7 @@ void httpd_data_send (unsigned char index)
 				http_entry[index].new_page_pointer = http_entry[index].new_page_pointer+5;
 			}
 			//wurde das Ende des Packetes erreicht?
-			//Verbindung TCP Port kann beim nächsten ACK geschlossen werden
+			//Verbindung TCP Port kann beim nÃ¤chsten ACK geschlossen werden
 			//Schleife wird abgebrochen keine Daten mehr!!
 			if (strncasecmp_P("END",http_entry[index].new_page_pointer,3)==0)
 			{	

@@ -6,15 +6,15 @@
  Version:        30.03.2009
  Description:    Html Seiten
 
- Dieses Programm ist freie Software. Sie können es unter den Bedingungen der 
- GNU General Public License, wie von der Free Software Foundation veröffentlicht, 
- weitergeben und/oder modifizieren, entweder gemäß Version 2 der Lizenz oder 
- (nach Ihrer Option) jeder späteren Version. 
+ Dieses Programm ist freie Software. Sie kÃ¶nnen es unter den Bedingungen der 
+ GNU General Public License, wie von der Free Software Foundation verÃ¶ffentlicht, 
+ weitergeben und/oder modifizieren, entweder gemÃ¤ÃŸ Version 2 der Lizenz oder 
+ (nach Ihrer Option) jeder spÃ¤teren Version. 
 
- Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, 
- daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
+ Die VerÃ¶ffentlichung dieses Programms erfolgt in der Hoffnung, 
+ daÃŸ es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
  sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
- FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
+ FÃœR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
 
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
  Programm erhalten haben. 
@@ -43,7 +43,7 @@ const PROGMEM char Page1[] = {
 	"</head><body>\r\n"
 	"<h1>AVR mini Webserver : Home</h1>\r\n"
 	"<div id=\"nav\"><a href=\"index.htm\">Home</a><a href=\"status.htm\">Status</a></div>\r\n"
-	"<div id=\"main\"><h2>Glückwunsch!</h2><br>\r\n"
+	"<div id=\"main\"><h2>GlÃ¼ckwunsch!</h2><br>\r\n"
 
 	//Kamerabild anzeigen oder Rakete
 	#if USE_CAM
@@ -54,7 +54,7 @@ const PROGMEM char Page1[] = {
 	
 	"<br><br>\r\n"
 	
-	"<p>Du hast es geschafft: Der Webserver läuft!</p>"
+	"<p>Du hast es geschafft: Der Webserver lÃ¤uft!</p>"
 	"<br><hr><br>\r\n"
 	
 	"<div style=\"width:200px;margin: 0 auto;\">\r\n"
@@ -67,7 +67,7 @@ const PROGMEM char Page1[] = {
 	"Port A Pin 1<br>\r\n"
 	"<input name=\"OUT\" type=\"checkbox\" value=\"C\" %PORTA2>"
 	"Port A Pin 2<br>"
-	 //Rechner über WOL einschalten
+	 //Rechner Ã¼ber WOL einschalten
     #if USE_WOL
 		"<input type=\"checkbox\" name=\"OUT\" value=\"W\">\r\n"
 		"Wake On Lan<br>"
@@ -78,7 +78,7 @@ const PROGMEM char Page1[] = {
 
 
 	"<div style=\"float:left; width:100px\">\r\n"
-	//Eingänge Abfragen %PINxy x = PORT / y = PIN
+	//EingÃ¤nge Abfragen %PINxy x = PORT / y = PIN
 	"<img src=\"%PIND7\" alt=\"\"> Port D Pin 7<br>"
 	"<img src=\"%PIND6\" alt=\"\"> Port D Pin 6<br>"
 	"<img src=\"%PIND5\" alt=\"\"> Port D Pin 5<br>"
@@ -94,7 +94,7 @@ const PROGMEM char Page1[] = {
 	"<tr>\r\n"
 	"<th>Eingang</th>\r\n"
 	"<th>Balken</th>\r\n"
-	"<th>Temperatur [°C]</th>\r\n"
+	"<th>Temperatur [Â°C]</th>\r\n"
 	"</tr><tr>\r\n"
 	
 	"<td>AD-Kanal0</td>\r\n"
@@ -171,7 +171,7 @@ const PROGMEM char Page3[] = {
 
 	
 //----------------------------------------------------------------------------
-//Das GIF Bild für LED on
+//Das GIF Bild fÃ¼r LED on
 const PROGMEM char led_on[] = 
 	{
 	0x47,0x49,0x46,0x38,0x39,0x61,0x11,0x00,0x11,0x00,0xA2,0x07,0x00,0x62,0x62,0x62,
@@ -187,7 +187,7 @@ const PROGMEM char led_on[] =
 	'%','E','N','D'};
 	
 //----------------------------------------------------------------------------
-//Das GIF Bild für den LED off
+//Das GIF Bild fÃ¼r den LED off
 const PROGMEM char led_off[] =
 	{
 	0x47,0x49,0x46,0x38,0x39,0x61,0x11,0x00,0x11,0x00,0xA2,0x07,0x00,0x57,0x56,0x57,
@@ -204,7 +204,7 @@ const PROGMEM char led_off[] =
 	'%','E','N','D'};
 	
 //----------------------------------------------------------------------------
-//Das GIF Bild für den Balken
+//Das GIF Bild fÃ¼r den Balken
 const PROGMEM char bild_balken[] = 
 	{
 	0x47,0x49,0x46,0x38,0x39,0x61,0x02,0x00,0x0A,0x00,0xA2,0x00,0x00,0xA2,0xA5,0xED,
@@ -214,7 +214,7 @@ const PROGMEM char bild_balken[] =
 	0x1D,0x53,0x09,0x00,0x3B,'%','E','N','D'};
 
 //----------------------------------------------------------------------------
-//Das GIF Bild für die Rakete
+//Das GIF Bild fÃ¼r die Rakete
 const PROGMEM char bild_rakete[] = 
 	{
 	0x47,0x49,0x46,0x38,0x39,0x61,0x5A,0x00,0x5C,0x00,0xA2,0x04,0x00,0x79,0x79,0xD8,

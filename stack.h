@@ -6,15 +6,15 @@ known Problems: none
 Version:        24.10.2007
 Description:    Ethernet Stack
 
-Dieses Programm ist freie Software. Sie können es unter den Bedingungen der 
-GNU General Public License, wie von der Free Software Foundation veröffentlicht, 
-weitergeben und/oder modifizieren, entweder gemäß Version 2 der Lizenz oder 
-(nach Ihrer Option) jeder späteren Version. 
+Dieses Programm ist freie Software. Sie kÃ¶nnen es unter den Bedingungen der 
+GNU General Public License, wie von der Free Software Foundation verÃ¶ffentlicht, 
+weitergeben und/oder modifizieren, entweder gemÃ¤ÃŸ Version 2 der Lizenz oder 
+(nach Ihrer Option) jeder spÃ¤teren Version. 
 
-Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, 
-daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
+Die VerÃ¶ffentlichung dieses Programms erfolgt in der Hoffnung, 
+daÃŸ es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
 sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
-FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
+FÃœR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
 
 Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
 Programm erhalten haben. 
@@ -40,14 +40,14 @@ struct
 typedef struct
 {
   unsigned int port;		// Port
-  void(*fp)(unsigned char);  	// Zeiger auf auszuführende Funktion
+  void(*fp)(unsigned char);  	// Zeiger auf auszufÃ¼hrende Funktion
 } TCP_PORT_ITEM;
 
 
 typedef struct
 {
   unsigned int port;		// Port
-  void(*fp)(unsigned char);  	// Zeiger auf auszuführende Funktion
+  void(*fp)(unsigned char);  	// Zeiger auf auszufÃ¼hrende Funktion
 } UDP_PORT_ITEM;
 
 TCP_PORT_ITEM TCP_PORT_TABLE[MAX_APP_ENTRY];
@@ -197,13 +197,13 @@ struct tcp_table tcp_entry[MAX_TCP_ENTRY+1];
 #define	PROT_TCP	0x06	//zeigt an die Nutzlasten enthalten das TCP Prot.
 #define	PROT_UDP	0x11	//zeigt an die Nutzlasten enthalten das UDP Prot.	
 
-//Defines für IF Abfrage
+//Defines fÃ¼r IF Abfrage
 #define IF_MYIP 			(ip->IP_Destaddr==*((unsigned long*)&myip[0]))
 #define IP_UDP_PACKET 			(ip->IP_Proto == PROT_UDP)
 #define IP_TCP_PACKET 			(ip->IP_Proto == PROT_TCP)
 #define IP_ICMP_PACKET 			(ip->IP_Proto == PROT_ICMP)
 
-//Defines für if Abfrage
+//Defines fÃ¼r if Abfrage
 #define ETHERNET_IP_DATAGRAMM	ethernet->EnetPacketType == 0x0008
 #define ETHERNET_ARP_DATAGRAMM 	ethernet->EnetPacketType == 0x0608
 
@@ -222,11 +222,11 @@ struct tcp_table tcp_entry[MAX_TCP_ENTRY+1];
 #define TCP_DATA_END_VAR 		(ETH_HDR_LEN + IP_VERS_LEN + ((eth_buffer[IP_PKTLEN]<<8)+eth_buffer[IP_PKTLEN+1]) - ((eth_buffer[TCP_HDRFLAGS_FIX] & 0xF0) >>2))
 
 //TCP Flags
-#define  FIN_FLAG			0x01	//Datenübertragung beendet (finished)
+#define  FIN_FLAG			0x01	//DatenÃ¼bertragung beendet (finished)
 #define  SYN_FLAG			0x02	//Verbindungs aufbauen (synchronize)
 #define  RST_FLAG			0x04	//Verbindung neu initialisieren (reset)
-#define  PSH_FLAG			0x08	//Datenübergabe an Anwendung beschleunigen (push)
-#define  ACK_FLAG			0x10	//Datenübertragung bestätigen (acknowledged)
+#define  PSH_FLAG			0x08	//DatenÃ¼bergabe an Anwendung beschleunigen (push)
+#define  ACK_FLAG			0x10	//DatenÃ¼bertragung bestÃ¤tigen (acknowledged)
 
 //----------------------------------------------------------------------------
 //Aufbau eines Ethernetheader
@@ -244,41 +244,41 @@ struct Ethernet_Header	{
 //Aufbau eines ARP Header
 //	
 //	2 BYTE Hardware Typ				|	2 BYTE Protokoll Typ	
-//	1 BYTE Länge Hardwareadresse	|	1 BYTE Länge Protokolladresse
+//	1 BYTE LÃ¤nge Hardwareadresse	|	1 BYTE LÃ¤nge Protokolladresse
 //	2 BYTE Operation
 //	6 BYTE MAC Adresse Absender		|	4 BYTE IP Adresse Absender
-//	6 BYTE MAC Adresse Empfänger	|	4 BYTE IP Adresse Empfänger	
+//	6 BYTE MAC Adresse EmpfÃ¤nger	|	4 BYTE IP Adresse EmpfÃ¤nger	
 struct ARP_Header	{
-  unsigned int ARP_HWType;		//Hardware Typ enthält den Code für Ethernet oder andere Link Layer
-  unsigned int ARP_PRType;		//Protokoll Typ enthält den Code für IP o. anderes Übertragungsprotokoll
-  unsigned char ARP_HWLen;		//Länge der Hardwareadresse enthält 6 für 6 Byte lange MAC Adressen
-  unsigned char ARP_PRLen;		//Länge der Protocolladresse enthält 4 für 4 Byte lange IP Adressen
-  unsigned int ARP_Op;			//Enthält Code der signalisiert ob es sich um eine Anfrage o. Antwort handelt
-  unsigned char ARP_SHAddr[6];	//Enthält die MAC Adresse des Anfragenden  
-  unsigned long ARP_SIPAddr;    //Enthält die IP Adresse des Absenders
+  unsigned int ARP_HWType;		//Hardware Typ enthÃ¤lt den Code fÃ¼r Ethernet oder andere Link Layer
+  unsigned int ARP_PRType;		//Protokoll Typ enthÃ¤lt den Code fÃ¼r IP o. anderes Ãœbertragungsprotokoll
+  unsigned char ARP_HWLen;		//LÃ¤nge der Hardwareadresse enthÃ¤lt 6 fÃ¼r 6 Byte lange MAC Adressen
+  unsigned char ARP_PRLen;		//LÃ¤nge der Protocolladresse enthÃ¤lt 4 fÃ¼r 4 Byte lange IP Adressen
+  unsigned int ARP_Op;			//EnthÃ¤lt Code der signalisiert ob es sich um eine Anfrage o. Antwort handelt
+  unsigned char ARP_SHAddr[6];	//EnthÃ¤lt die MAC Adresse des Anfragenden  
+  unsigned long ARP_SIPAddr;    //EnthÃ¤lt die IP Adresse des Absenders
   unsigned char ARP_THAddr[6];	//MAC Adresse Ziel, ist in diesem Fall 6 * 00,da die Adresse erst noch herausgefunden werden soll (ARP Request)
-  unsigned long ARP_TIPAddr;    //IP Adresse enthält die IP Adresse zu der die Kommunikation aufgebaut werden soll 
+  unsigned long ARP_TIPAddr;    //IP Adresse enthÃ¤lt die IP Adresse zu der die Kommunikation aufgebaut werden soll 
 };
 
 //----------------------------------------------------------------------------
 //Aufbau eines IP Datagramms (B=BIT)
 //	
-//4B Version	|4B Headergr.	|8B Tos	|16B Gesamtlänge in Bytes	
+//4B Version	|4B Headergr.	|8B Tos	|16B GesamtlÃ¤nge in Bytes	
 //16B Identifikation			|3B Schalter	|13B Fragmentierungsposition
-//8B Time to Live	|8B Protokoll	|16B Header Prüfsumme 
+//8B Time to Live	|8B Protokoll	|16B Header PrÃ¼fsumme 
 //32B IP Quelladresse
 //32B IB Zieladresse
 struct IP_Header	{
   unsigned char	IP_Vers_Len;	//4 BIT Die Versionsnummer von IP, 
-  //meistens also 4 + 4Bit Headergröße 	
+  //meistens also 4 + 4Bit HeadergrÃ¶ÃŸe 	
   unsigned char	IP_Tos;			//Type of Service
-  unsigned int	IP_Pktlen;		//16 Bit Komplette Läng des IP Datagrams in Bytes
-  unsigned int	IP_Id;			//ID des Packet für Fragmentierung oder 
+  unsigned int	IP_Pktlen;		//16 Bit Komplette LÃ¤ng des IP Datagrams in Bytes
+  unsigned int	IP_Id;			//ID des Packet fÃ¼r Fragmentierung oder 
   //Reassemblierung
   unsigned int	IP_Frag_Offset;	//wird benutzt um ein fragmentiertes 
   //IP Packet wieder korrekt zusammenzusetzen
   unsigned char	IP_ttl;			//8 Bit Time to Live die lebenszeit eines Paket
-  unsigned char	IP_Proto;		//Zeigt das höherschichtige Protokoll an 
+  unsigned char	IP_Proto;		//Zeigt das hÃ¶herschichtige Protokoll an 
   //(TCP, UDP, ICMP)
   unsigned int	IP_Hdr_Cksum;	//Checksumme des IP Headers
   unsigned long	IP_Srcaddr;		//32 Bit IP Quelladresse
@@ -288,7 +288,7 @@ struct IP_Header	{
 //----------------------------------------------------------------------------
 //Aufbau einer ICMP Nachricht
 //	
-//8 BIT Typ	|8 BIT Code	|16 BIT Prüfsumme	
+//8 BIT Typ	|8 BIT Code	|16 BIT PrÃ¼fsumme	
 //Je nach Typ			|Nachricht unterschiedlich
 //Testdaten
 //
@@ -296,8 +296,8 @@ struct IP_Header	{
 struct ICMP_Header {
   unsigned char	ICMP_Type;		//8 bit typ identifiziert Aufgabe der Nachricht 
                                         //0 = Echo Reply 8 = Echo Request
-  unsigned char	ICMP_Code;		//8 Bit Code enthält Detailangaben zu bestimmten Typen
-  unsigned int 	ICMP_Cksum;		//16 Bit Prüfsumme enthält die CRC Prüfsumme
+  unsigned char	ICMP_Code;		//8 Bit Code enthÃ¤lt Detailangaben zu bestimmten Typen
+  unsigned int 	ICMP_Cksum;		//16 Bit PrÃ¼fsumme enthÃ¤lt die CRC PrÃ¼fsumme
   unsigned int 	ICMP_Id;		//2 byte Identifizierung
   unsigned int 	ICMP_SeqNum;	//Sequenznummer
 };
@@ -307,15 +307,15 @@ struct ICMP_Header {
 //
 //
 struct TCP_Header {
-  unsigned int 	TCP_SrcPort;	//der Quellport für die Verbindung (Socket)
-  unsigned int 	TCP_DestPort;	//der Zielport für die Verbindung (Socket)
+  unsigned int 	TCP_SrcPort;	//der Quellport fÃ¼r die Verbindung (Socket)
+  unsigned int 	TCP_DestPort;	//der Zielport fÃ¼r die Verbindung (Socket)
   unsigned long	TCP_Seqnum;	//numerierter Bytestrom
   unsigned long	TCP_Acknum;	//numerierter Bytestrom (Gegenrichtung)
   unsigned char TCP_Hdrlen;
-  unsigned char	TCP_HdrFlags;//4Bit Länge des Headers in 32 Bit schritten rest Flags
-  unsigned int	TCP_Window;	//Fenstergröße max. 64K Byte
-  unsigned int	TCP_Chksum;	//Enthält eine Prüfsumme über Header und Datenbereich
-  unsigned int	TCP_UrgentPtr;	//16 Bit für dringende Übertragung
+  unsigned char	TCP_HdrFlags;//4Bit LÃ¤nge des Headers in 32 Bit schritten rest Flags
+  unsigned int	TCP_Window;	//FenstergrÃ¶ÃŸe max. 64K Byte
+  unsigned int	TCP_Chksum;	//EnthÃ¤lt eine PrÃ¼fsumme Ã¼ber Header und Datenbereich
+  unsigned int	TCP_UrgentPtr;	//16 Bit fÃ¼r dringende Ãœbertragung
 };
 
 //----------------------------------------------------------------------------
@@ -323,10 +323,10 @@ struct TCP_Header {
 //
 //
 struct UDP_Header {
-  unsigned int 	udp_SrcPort;	//der Quellport für die Verbindung (Socket)
-  unsigned int 	udp_DestPort;	//der Zielport für die Verbindung (Socket)
+  unsigned int 	udp_SrcPort;	//der Quellport fÃ¼r die Verbindung (Socket)
+  unsigned int 	udp_DestPort;	//der Zielport fÃ¼r die Verbindung (Socket)
   unsigned int  udp_Hdrlen;
-  unsigned int	udp_Chksum;	//Enthält eine Prüfsumme über Header und Datenbereich
+  unsigned int	udp_Chksum;	//EnthÃ¤lt eine PrÃ¼fsumme Ã¼ber Header und Datenbereich
 };
 
 #endif // #define _STACK_H
