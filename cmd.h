@@ -34,11 +34,16 @@ typedef struct
 #define MAX_VAR	10
 #define HELPTEXT	1
 
-extern unsigned char extract_cmd (char *);
+extern unsigned char extract_cmd(char *);
 extern void write_eeprom_ip (unsigned int);
 
 extern void save_ip_addresses(void);
 extern void read_ip_addresses (void);
+void command_rgb(void);
+void command_fader(void);
+void command_fader_delay(void);
+void command_fade(void);
+void command_fader_delay(void);
 
 //reset the unit
 extern void command_reset		(void);

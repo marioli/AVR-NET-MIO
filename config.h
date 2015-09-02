@@ -25,13 +25,12 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #ifndef _CONFIG_H_
 #define _CONFIG_H_	
 
-//Konfiguration der PORTS (HEX)
-//1=OUTPUT / 0=INPUT
-#define OUTA 		0x07
-#define OUTC 		0x06
-#define OUTD 		0x00
-//Achtung!!!! an PORTB ist der ENC
-//nur ändern wenn man weiß was man macht!
+/* 0x8 on PORTB (PB3 = OC0) */
+#define LED_GREEN 0x8
+/* 0x10 on PORTD (PD4 = OC1B)  */
+#define LED_BLUE 0x10
+/* 0x20 on PORTD (PD5 = OC1A)  */
+#define LED_RED 0x20
 
 //Watchdog timer for the ENC2860, resets the stack if timeout occurs
 #define WTT 1200 //Watchdog timer in timer interrupt
@@ -78,9 +77,6 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 //#define F_CPU 11059200UL
 #endif
 
-//Timertakt intern oder extern
-#define EXTCLOCK 0 //0=Intern 1=Externer Uhrenquarz
-
 //Baudrate der seriellen Schnittstelle
 #define BAUDRATE 9600
 
@@ -94,10 +90,6 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 //für Username:Passwort
 #define HTTP_AUTH_STRING "admin:uli1"
 //#define HTTP_AUTH_STRING "user:pass"
-
-//Commandos und Ausgaben erfolgen über Telnet
-#define CMD_TELNET      0
-
 
 /* eeprom locations */
 #define IP_EEPROM_STORE         30

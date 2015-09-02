@@ -30,12 +30,14 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #include <avr/eeprom.h>
 #include "usart.h"
 #include "stack.h"
+#include "fader.h"
 #include "httpd.h"
 #include "ntp.h"
 #include "timer.h"
 #include "dnsc.h"
 
 volatile unsigned int variable[MAX_VAR];
+volatile unsigned int args;
 
 COMMAND_STRUCTUR COMMAND_TABELLE[] = // Befehls-Tabelle
 {
@@ -48,18 +50,17 @@ COMMAND_STRUCTUR COMMAND_TABELLE[] = // Befehls-Tabelle
   {"NTP",command_ntp},
   {"MAC",command_mac},
   {"VER",command_ver},
-  {"SV",command_setvar},
   {"TIME",command_time},
   {"NTPR",command_ntp_refresh},	
   {"PING", command_ping},
-#if HELPTEXT
+  {"RGB", command_rgb},
+  {"FADER", command_fade},
+  {"FD", command_fader_delay},
   {"HELP",command_help},
   {"?",command_help},
-#endif //HELPTEXT
   {NULL,NULL} 
 };
 
-#if HELPTEXT
 const PROGMEM char helptext[] = {
   "RESET  - reset the AVR - Controller\r\n"
     "ARP    - list the ARP table\r\n"
@@ -71,36 +72,60 @@ const PROGMEM char helptext[] = {
     "NTPR   - NTP Refresh\r\n"
     "MAC    - list MAC-address\r\n"
     "VER    - list enc version number\r\n"
-    "SV     - set variable\r\n"
     "PING   - send Ping\r\n"
     "TIME   - get time\r\n"
+    "RGB    - set/get RGB values\r\n"
+    "FADER  - employ the fader to RGB value\r\n"
+    "FD     - set/get fader delay (ticks)\r\n"
     "HELP   - print Helptext\r\n"
     "?      - print Helptext\r\n"
 };
-#endif
 
 //------------------------------------------------------------------------------
 //Commando auswerten
-unsigned char extract_cmd (char *string_pointer)
+unsigned char extract_cmd(char *string_pointer)
 {
   //Stringzeiger;
   char *string_pointer_tmp;
-  unsigned char cmd_index = 0;
+  unsigned char cmd_index = 0, hit = 0;
 
-  string_pointer_tmp = strsep(&string_pointer," "); 
+  /* emtpy command is valid too */
+  if(*string_pointer == 0)
+  {
+    return(2);
+  }
+
+  string_pointer_tmp = strsep(&string_pointer," ");
 
   //Kommando in Tabelle suchen
-  while(strcasecmp(COMMAND_TABELLE[cmd_index].cmd,string_pointer_tmp))
+  while(COMMAND_TABELLE[cmd_index].cmd)
   {
-    //Abruch Whileschleife und Unterprogramm verlassen 
-    if (COMMAND_TABELLE[++cmd_index].cmd == 0) return(0);
+    if(strcasecmp(COMMAND_TABELLE[cmd_index].cmd, string_pointer_tmp) == 0)
+    {
+      hit = 1;
+      break;
+    }
+    cmd_index++;
+  }
+  if(!hit)
+  {
+    return(0);
   }
 
   //Variablen finden und auswerten
-  for (unsigned char a = 0; a<MAX_VAR;a++)
+  args = 0;
+  for(unsigned char a = 0; a < MAX_VAR; a++)
   { 
-    string_pointer_tmp = strsep(&string_pointer,"., ");  
-    variable[a] = strtol(string_pointer_tmp,NULL,0);
+    variable[a] = 0;
+  }
+  for(unsigned char a = 0; a < MAX_VAR; a++)
+  { 
+    if(NULL == (string_pointer_tmp = strsep(&string_pointer,"., ")))
+    {
+      break;
+    }
+    variable[a] = strtol(string_pointer_tmp, NULL , 0);
+    args++;
   }
 
   //Kommando ausführen
@@ -110,9 +135,42 @@ unsigned char extract_cmd (char *string_pointer)
 
 //------------------------------------------------------------------------------
 //Reset ausführen
-void command_reset (void)
+void command_reset(void)
 {
   RESET();
+}
+
+
+//------------------------------------------------------------------------------
+//get/set RGB of LEDs
+void command_rgb(void)
+{
+  if(args == 3)
+  {
+    OCR1A = variable[0];
+    OCR0 = variable[1];
+    OCR1B = variable[2];
+  }
+  usart_write("Red:   %i\r\n", OCR1A);
+  usart_write("Green: %i\r\n", OCR0);
+  usart_write("Blue:  %i\r\n", OCR1B);
+}
+
+void command_fade(void)
+{
+  if(args == 3)
+  {
+    fader_fade_to(variable[0], variable[1], variable[2]);
+  }
+  else
+  {
+    usart_write("Fader needs RGB values\r\n");
+  }
+}
+
+void command_fader_delay(void)
+{
+  usart_write("Fading delay: %i ticks\r\n", fader_set_delay(variable[0]));
 }
 
 //------------------------------------------------------------------------------
@@ -129,7 +187,7 @@ void command_ip (void)
 
 //------------------------------------------------------------------------------
 //
-void write_eeprom_ip (unsigned int eeprom_adresse)
+void write_eeprom_ip(unsigned int eeprom_adresse)
 {
   if (*((unsigned int*)&variable[0]) != 0x00000000)
   {	
@@ -224,14 +282,6 @@ void command_tcp (void)
 }
 
 //------------------------------------------------------------------------------
-//ändern einer Variable
-void command_setvar (void)
-{
-  var_array[variable[0]] = variable[1];
-  usart_write("Inhalt der Variable[%2i] = %2i\r\n",variable[0],var_array[variable[0]]);
-}
-
-//------------------------------------------------------------------------------
 //print Time
 void command_time (void)
 {
@@ -266,9 +316,8 @@ void command_ping (void)
 
 //------------------------------------------------------------------------------
 //print helptext
-void command_help (void)
+void command_help(void)
 {
-#if HELPTEXT
   unsigned char data;
   PGM_P helptest_pointer = helptext;
 
@@ -276,8 +325,7 @@ void command_help (void)
   {
     data = pgm_read_byte(helptest_pointer++);
     usart_write("%c",data);
-  }while(data != 0);
-#endif
+  } while(data);
 }
 
 //------------------------------------------------------------------------------
@@ -313,7 +361,7 @@ void save_ip_addresses(void)
 
 //------------------------------------------------------------------------------
 //Read all IP-Datas
-void read_ip_addresses (void)
+void read_ip_addresses(void)
 {
   (*((unsigned long*)&myip[0]))      = get_eeprom_value(IP_EEPROM_STORE,MYIP);
   (*((unsigned long*)&netmask[0]))   = get_eeprom_value(NETMASK_EEPROM_STORE,NETMASK);

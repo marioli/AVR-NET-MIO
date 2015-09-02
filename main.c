@@ -31,7 +31,6 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #include "timer.h"
 #include "httpd.h"
 #include "cmd.h"
-#include "telnetd.h"
 #include "ntp.h"
 #include "base64.h"
 #include "http_get.h"
@@ -46,28 +45,32 @@ int main(void)
   unsigned long time_update = 0;
   unsigned long a;
 
-  DDRA = OUTA;
-  DDRC = OUTC;
-  DDRD = OUTD;
-
+  fader_init();
   usart_init(BAUDRATE);
   usart_write("\n\rSystem ready.\n\r");
   usart_write("Build "__DATE__" at "__TIME__"\r\n");
   usart_write("GCC-"__VERSION__"\r\n");
 
+  /* sleep a bit */
   for(a = 0; a < 1000000; a++)
   {
     asm("nop");
   }
 
+  DDRA = 0x00;
+  DDRB |= 0x8;
+  DDRC = 0x00;
+  DDRD = LED_RED | LED_BLUE;
+
   stack_init();
   httpd_init();
-  telnetd_init();
 
-  //Ethernetcard Interrupt enable
+  fader_fade_to(255, 100, 100);
+
+  /* Ethernetcard Interrupt enable */
   ETH_INT_ENABLE;
 
-  //Globale Interrupts einschalten
+  /* Globale Interrupts einschalten */
   sei(); 
 
   dhcp_init();
@@ -109,18 +112,20 @@ int main(void)
   {
     eth_get_data();
 
-    //Terminalcommandos auswerten
-    if (usart_status.usart_ready){
+    /* look if there is something in the serial buffer */
+    if(usart_status.usart_ready){
       usart_write("\r\n");
-      if(extract_cmd(&usart_rx_buffer[0]))
+      switch(extract_cmd(usart_rx_buffer))
       {
-        usart_write("Ready\r\n\r\n");
+        case 0:
+          usart_write("ERR\r\n");
+          break;
+        case 1:
+          usart_write("OK\r\n");
+          break;
       }
-      else
-      {
-        usart_write("ERROR\r\n\r\n");
-      }
-      usart_status.usart_ready =0;
+      usart_write("#");
+      usart_status.usart_ready = 0;
     }
 
     //Empfang von Zeitinformationen
@@ -134,9 +139,6 @@ int main(void)
       usart_write("dhcp lease renewal failed\r\n");
       RESET();
     }
-
-    //USART Daten für Telnetanwendung?
-    telnetd_send_data();
 
     if(ping.result)
     {

@@ -30,7 +30,6 @@ Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #include <avr/pgmspace.h>
 #include "usart.h"
 #include "httpd.h"
-#include "telnetd.h"
 #include "enc28j60.h"
 #include "config.h"
 #include "timer.h"
@@ -96,10 +95,8 @@ void stack_init (void)
   //Broadcast-Adresse berechnen
   (*((unsigned long*)&broadcast_ip[0])) = (((*((unsigned long*)&myip[0])) & (*((unsigned long*)&netmask[0]))) | (~(*((unsigned long*)&netmask[0]))));
 
-#if USE_DNS
   //DNS-Server IP aus EEPROM auslesen
   (*((unsigned long*)&dns_server_ip[0])) = get_eeprom_value(DNS_IP_EEPROM_STORE,DNS_IP);
-#endif
 
   //MAC Adresse setzen
   mymac[0] = MYMAC1;

@@ -21,7 +21,7 @@ DEVICE     = atmega32
 CLOCK      = 16000000
 PROGRAMMER = -c usbasp 
 OBJECTS    = base64.o dhcpc.o enc28j60.o httpd.o main.o stack.o timer.o usart.o \
-cmd.o dnsc.o http_get.o ntp.o telnetd.o 
+cmd.o dnsc.o http_get.o ntp.o fader.o
 
 #FUSES      = -U hfuse:w:0xd9:m -U lfuse:w:0x24:m
 # For computing fuse byte values for other devices and options see

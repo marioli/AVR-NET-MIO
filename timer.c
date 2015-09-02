@@ -1,25 +1,25 @@
 /*----------------------------------------------------------------------------
- Copyright:      Radig Ulrich  mailto: mail@ulrichradig.de
- Author:         Radig Ulrich
- Remarks:
- known Problems: none
- Version:        24.10.2007
- Description:    Timer Routinen
+Copyright:      Radig Ulrich  mailto: mail@ulrichradig.de
+Author:         Radig Ulrich
+Remarks:
+known Problems: none
+Version:        24.10.2007
+Description:    Timer Routinen
 
- Dieses Programm ist freie Software. Sie können es unter den Bedingungen der 
- GNU General Public License, wie von der Free Software Foundation veröffentlicht, 
- weitergeben und/oder modifizieren, entweder gemäß Version 2 der Lizenz oder 
- (nach Ihrer Option) jeder späteren Version. 
+Dieses Programm ist freie Software. Sie können es unter den Bedingungen der 
+GNU General Public License, wie von der Free Software Foundation veröffentlicht, 
+weitergeben und/oder modifizieren, entweder gemäß Version 2 der Lizenz oder 
+(nach Ihrer Option) jeder späteren Version. 
 
- Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, 
- daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
- sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
- FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
+Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, 
+daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, 
+sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT 
+FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. 
 
- Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
- Programm erhalten haben. 
- Falls nicht, schreiben Sie an die Free Software Foundation, 
- Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA. 
+Sie sollten eine Kopie der GNU General Public License zusammen mit diesem 
+Programm erhalten haben. 
+Falls nicht, schreiben Sie an die Free Software Foundation, 
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA. 
 ------------------------------------------------------------------------------*/
 
 #include "config.h"
@@ -29,82 +29,65 @@
 #include "stack.h"
 #include "ntp.h"
 #include "cmd.h"
+#include "fader.h"
 #include "dhcpc.h"
 #include "timer.h"
 
-#if USE_ARTNET
-	#include "artnet.h"
-#endif
-
 volatile unsigned long time;
 volatile unsigned long time_watchdog = 0;
+static uint8_t postscaler = 252;
 
 //----------------------------------------------------------------------------
-//Diese Routine startet und inizialisiert den Timer
-void timer_init (void)
+//Diese Routine startet und initialisiert den Timer
+void timer_init(void)
 {
-	#if EXTCLOCK==1
-		#if defined (__AVR_ATmega644__)
-			//Asynchroner Modus ein, Oszillator an TOSC1 und TOSC2 aktiv
-			ASSR |= (1<<AS2);
-			TCCR2B = 0x05;
-			while(ASSR & 0x11);
-			//Capture/Compare-Interrupt aktiv
-			TIMSK2 |= (1<<OCIE2A);
-		#else
-			//Asynchroner Modus ein, Oszillator an TOSC1 und TOSC2 aktiv
-			ASSR  = (1<<AS2);
-			//CTC-Modus an (Clear Timer on Compare Match)
-			TCCR2 = (1<<WGM21);			
-			//dieser Wert ergibt eine Sekunde Periodendauer
-			OCR2  = 31;	
-			//lösche Prescaler 2				
-			SFIE  = (1<<PSR2);			
-			//Starte Timer 2 mit Prescaler gleich 1/1024
-			TCCR2 |= (1<<CS22)|(1<<CS21)|(1<<CS20); 
-			while(ASSR & 0x07);
-			//Capture/Compare-Interrupt aktiv
-			TIMSK = (1<<OCIE2);			
-		#endif
-	#else
-			TCCR1B |= (1<<WGM12) | (1<<CS10 | 0<<CS11 | 1<<CS12);
-			TCNT1 = 0;
-			OCR1A = (F_CPU / 1024) - 1;
-			TIMSK |= (1 << OCIE1A);
-	#endif
-return;
+
+  /****** prepare timer for LED_GREEN (OC0) ******/
+  TCCR0 = (1<<WGM00) | (1<<WGM01) | (0<<COM00) | (1<<COM01) | (1<<CS00) | (0<<CS01) | (0<<CS02);
+  TCNT0 = 0;
+  OCR0 = 0;
+
+  /****** prepare timer for LED_RED/LED_BLUE (OC1A/OC1B) ******/
+  TCCR1A = (1<<WGM10) | (0<<WGM11) | (0<<COM1A0) | (1<<COM1A1) | (0<<COM1B0) | (1<<COM1B1);
+  TCCR1B = (1<<WGM12) | (0<<WGM13) | (1<<CS10) | (0<<CS11) | (0<<CS12);
+  TCNT1 = 0;
+  OCR1A = 0;
+  OCR1B = 0;
+
+  /****** prepare timer for TICKS of the system ******/
+  /* Timer Counter Control Register 2
+   *      CTC Mode                  Prescaler: 1024 Cycles */
+  TCCR2 = (1<<WGM21) | (0<<WGM20) | ( 1<<CS22 | 1<<CS21 | 1<<CS20);
+  TCNT2 = 0;
+  OCR2 = ((F_CPU / 1024) / 252);
+  TIMSK |= (1 << OCIE2);
+  return;
 };
 
 //----------------------------------------------------------------------------
 //Timer Interrupt
-#if EXTCLOCK==1
-	#if defined (__AVR_ATmega644__)
-    ISR (TIMER2_COMPA_vect)
-	#else
-    ISR (TIMER2_COMP_vect)
-	#endif
-#else
-	ISR (TIMER1_COMPA_vect)
-#endif
+ISR (TIMER2_COMP_vect)
 {
-	//tick 1 second
-	time++;
-    if((stack_watchdog++) > WTT)  //emergency reset of the stack
-    {
-        RESET();
-	}
-    eth.timer = 1;
-	
-	#if USE_NTP
-	ntp_timer--;
-	#endif //USE_NTP
-	
-	#if USE_DHCP
-	if ( dhcp_lease > 0 ) dhcp_lease--;
-    if ( gp_timer   > 0 ) gp_timer--;
-    #endif //USE_DHCP
-	
-	#if USE_ARTNET
-	artnet_tick();
-	#endif //USE_ARTNET
+  /* the fader is high-res */
+  fader_do_fade();
+
+  /* everything else is needed once a second */
+  if (postscaler--)
+    return;
+
+  /* reset postscaler */
+  postscaler = 252;
+
+  /* tick 1 second */
+  time++;
+  if((stack_watchdog++) > WTT)  //emergency reset of the stack
+  {
+    RESET();
+  }
+  eth.timer = 1;
+
+  ntp_timer--;
+
+  if ( dhcp_lease > 0 ) dhcp_lease--;
+  if ( gp_timer   > 0 ) gp_timer--;
 }
